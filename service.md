@@ -17,7 +17,7 @@ Service 是一个专门在后台处理长时间任务的 Android 组件, 没有U
 
 ### 2 种调用对 Service 生命周期的影响
 
-![service-lifecycle][asset/service-lifecycle.png]
+![service-lifecycle](asset/service-lifecycle.png)
 
 ### Service 能否在主线程中执行?
 

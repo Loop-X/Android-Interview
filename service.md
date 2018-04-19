@@ -19,6 +19,12 @@ Service 是一个专门在后台处理长时间任务的 Android 组件, 没有U
 
 ![service-lifecycle](asset/service-lifecycle.png)
 
+如果是非绑定模式, Service 会经历 onCreate 到 onStartCommand, 然后处于运行状态，当调用者调用 `stopService()` 或者服务本身调用 `stopSelf()` 的时候调用 onDestroy. **如果是调用者自己直接退出而没有调用 stopService 的话, Service 会一直在后台运行.**
+
+但是如果是绑定模式, 一个 Service 可以被多个客户进行绑定, 只有所有的绑定对象都执行了`onUnbind()` 方法后该服务才回销毁.
+
+我们在开发的过程中还必须注意 **Service 实例只会有一个**, 也就是说如果当前要启动的 Service 已经存在了那么就不会再创建该 Service 当然也就不会调用 `onCreate()`.
+
 ### Service 能否在主线程中执行?
 
 可以. Service 本身就是在主线程中调用的.
@@ -30,6 +36,12 @@ Service 是一个专门在后台处理长时间任务的 Android 组件, 没有U
 ### 如果要做耗时操作呢?
 
 除了直接使用一些异步操作如 Handler 之外创建新的线程. 你可以直接使用 IntentService
+
+IntentService 是用来处理异步 (asynchronous) 请求的 Service 的子类. 它是通过创建一个独立的工作者线程 (worker thread) 来完成工作. 并且在完成工作后自动关闭服务. 
+
+通常的 Service 是用于无需 UI 的任务. 但是不能执行耗时任务. 不然的话需要创建额外的线程来执行任务. 所以就有了 IntentService. 它主要被用于处理耗时任务的服务, 自身内部会自动创建一个额外的线程来执行任务. 
+
+总结:
 
 * 它本质是一种特殊的 Service, 继承自 Service 并且本身就是一个抽象类
 * 它可以用于在后台执行耗时的异步任务, 当任务完成后会自动停止
